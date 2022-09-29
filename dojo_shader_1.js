@@ -1,8 +1,9 @@
-var camera, scene, renderer;
-var mesh;
+let camera, scene, renderer;
+let mesh;
 
-init();
-animate();
+const cubeUniforms = {
+    iTime: { value: 0 },
+};
 
 function init() {
 
@@ -10,11 +11,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 400;
 
-    var geometry = new THREE.BoxGeometry(200, 200, 200);
-
-    const cubeUniforms = {
-        iResolution:  { value: new THREE.Vector3() }
-    };
+    const geometry = new THREE.BoxGeometry(200, 200, 200);
 
     const cubeMaterial = new THREE.ShaderMaterial({
         fragmentShader : dojo1_fragmentShader,
@@ -39,11 +36,19 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate() {
+function animate(millis) {
+
+    let time = millis * 0.001;
+
+    cubeUniforms.iTime.value = time;
+
     requestAnimationFrame(animate);
 
-    mesh.rotation.x += 0.005;
-    mesh.rotation.y += 0.01;
+    mesh.rotation.x = 0.2 * time;
+    mesh.rotation.y = 0.4 * time;
 
     renderer.render(scene, camera);
 }
+
+init();
+animate();
